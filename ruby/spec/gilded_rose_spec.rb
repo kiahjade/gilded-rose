@@ -14,6 +14,12 @@ describe GildedRose do
       GildedRose.new(items).update_quality
       expect(items[0].quality).to eq 9
     end
+
+    it "cannot have a negative quality" do
+      items = [Item.new("foo", 10, 0)]
+      GildedRose.new(items).update_quality
+      expect(items[0].quality).to eq 0
+    end
   end
 
 end
