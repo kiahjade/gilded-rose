@@ -36,14 +36,10 @@ class GildedRose
           item.quality = item.quality + 1
           if item.name == "Backstage passes to a TAFKAL80ETC concert"
             if item.sell_in < 11
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
+              increase_quality(item)
             end
             if item.sell_in < 6
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
+              increase_quality(item)
             end
           end
         end
@@ -60,9 +56,7 @@ class GildedRose
             item.quality = item.quality - item.quality
           end
         else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          increase_quality(item)
         end
       end
     end
@@ -80,5 +74,10 @@ class GildedRose
 
   def decrease_faster(item)
     item.quality -= 2
+  end
+
+  def increase_quality(item)
+    item.quality < 50
+    item.quality += 1
   end
 end
