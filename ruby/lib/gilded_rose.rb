@@ -26,11 +26,7 @@ class GildedRose
       end
 
       if !special_item?(item)
-        if item.quality > 0
-          if item.name != "Sulfuras, Hand of Ragnaros"
-            item.quality = item.quality - 1
-          end
-        end
+        not_sulfuras(item)
       else
         if item.quality < 50
           item.quality = item.quality + 1
@@ -48,9 +44,7 @@ class GildedRose
         if item.name != "Aged Brie"
           if item.name != "Backstage passes to a TAFKAL80ETC concert"
             if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                item.quality = item.quality - 1
-              end
+              not_sulfuras(item)
             end
           else
             item.quality = item.quality - item.quality
@@ -79,5 +73,17 @@ class GildedRose
   def increase_quality(item)
     item.quality < 50
     item.quality += 1
+  end
+
+  def decrease_quality(item)
+    item.quality -= 1
+  end
+
+  def not_sulfuras(item)
+    if item.quality > 0
+      if item.name != "Sulfuras, Hand of Ragnaros"
+        decrease_quality(item)
+      end
+    end
   end
 end
