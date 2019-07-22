@@ -2,6 +2,8 @@ require_relative 'item'
 
 class GildedRose
 
+  MAX_QUALITY = 50
+
   def initialize(items)
     @items = items
   end
@@ -28,19 +30,17 @@ class GildedRose
       if !special_item?(item)
         not_sulfuras(item)
       else
-        if item.quality < 50
-          item.quality = item.quality + 1
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
-            if item.sell_in < 11
-              increase_quality(item)
-            end
-            if item.sell_in < 6
-              increase_quality(item)
-            end
+        increase_quality(item)
+        if item.name == "Backstage passes to a TAFKAL80ETC concert"
+          if item.sell_in < 11
+            increase_quality(item)
+          end
+          if item.sell_in < 6
+            increase_quality(item)
           end
         end
       end
-      if item.sell_in < 0
+      if sell_in_reached(item)
         if item.name != "Aged Brie"
           if item.name != "Backstage passes to a TAFKAL80ETC concert"
             if item.quality > 0
@@ -66,13 +66,16 @@ class GildedRose
     item.name == "Conjured"
   end
 
+  def below_max_quality(item)
+    item.quality < MAX_QUALITY
+  end
+
   def decrease_faster(item)
     item.quality -= 2
   end
 
   def increase_quality(item)
-    item.quality < 50
-    item.quality += 1
+    item.quality += 1 if below_max_quality(item)
   end
 
   def decrease_quality(item)
@@ -85,5 +88,9 @@ class GildedRose
         decrease_quality(item)
       end
     end
+  end
+
+  def sell_in_reached(item)
+    item.sell_in < 0
   end
 end
