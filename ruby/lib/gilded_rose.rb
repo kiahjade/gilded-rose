@@ -6,7 +6,20 @@ class GildedRose
     @items = items
   end
 
-  def update_quality()
+  def update
+    update_sell_in
+    update_quality
+  end
+
+  def update_sell_in
+    @items.each do |item|
+      if item.name != "Sulfuras, Hand of Ragnaros"
+        item.sell_in -= 1
+      end
+    end
+  end
+
+  def update_quality
     @items.each do |item|
       if conjured?(item)
         decrease_faster(item)
@@ -34,9 +47,6 @@ class GildedRose
             end
           end
         end
-      end
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.sell_in = item.sell_in - 1
       end
       if item.sell_in < 0
         if item.name != "Aged Brie"
