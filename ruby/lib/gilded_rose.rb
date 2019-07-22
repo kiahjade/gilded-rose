@@ -8,6 +8,10 @@ class GildedRose
 
   def update_quality()
     @items.each do |item|
+      if conjured?(item)
+        decrease_faster(item)
+      end
+
       if !special_item?(item)
         if item.quality > 0
           if item.name != "Sulfuras, Hand of Ragnaros"
@@ -58,5 +62,13 @@ class GildedRose
 
   def special_item?(item)
     item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
+  end
+
+  def conjured?(item)
+    item.name == "Conjured"
+  end
+
+  def decrease_faster(item)
+    item.quality -= 2
   end
 end
