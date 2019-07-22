@@ -23,44 +23,22 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if conjured?(item)
-        decrease_faster(item)
-      end
-
-      if !special_item?(item)
-        not_sulfuras(item)
-      else
+      decrease_quality(item)
+      decrease_quality(item) if sell_in_reached(item)
+      if item.name == "Aged Brie"
         increase_quality(item)
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 11
-            increase_quality(item)
-          end
-          if item.sell_in < 6
-            increase_quality(item)
-          end
-        end
+        increase_quality(item) if sell_in_reached(item)
       end
-      if sell_in_reached(item)
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            if item.quality > 0
-              not_sulfuras(item)
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
-          increase_quality(item)
-        end
+      if item.name == "Backstage passes to a TAFKAL80ETC concert"
+        increase_faster(item)
+        increase_quality(item) if item.sell_in < 11
+        increase_quality(item) if item.sell_in < 6
+        return item.quality = 0 if sell_in_reached(item)
       end
     end
   end
 
   private
-
-  def special_item?(item)
-    item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
-  end
 
   def conjured?(item)
     item.name == "Conjured"
@@ -70,8 +48,8 @@ class GildedRose
     item.quality < MAX_QUALITY
   end
 
-  def decrease_faster(item)
-    item.quality -= 2
+  def increase_faster(item)
+    item.quality += 2
   end
 
   def increase_quality(item)
@@ -79,13 +57,10 @@ class GildedRose
   end
 
   def decrease_quality(item)
-    item.quality -= 1
-  end
-
-  def not_sulfuras(item)
-    if item.quality > 0
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        decrease_quality(item)
+    if item.name != "Sulfuras, Hand of Ragnaros" && item.name != "Aged Brie"
+      if item.quality > 0
+        item.quality -= 1
+        item.quality -= 1 if conjured?(item)
       end
     end
   end
